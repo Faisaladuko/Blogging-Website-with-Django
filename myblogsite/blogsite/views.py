@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Post
 from django.http import Http404
 
@@ -9,10 +9,13 @@ def post_list(request):
     return render(request, 'blogsite/post/listss.html', {'posts':posts})
 
 #single post
-def post_details(request, id):
-    try:
-        post = Post.published.get(id=id)
-    except Post.DoesNotExist:
-        raise Http404("No Post Found")
-    return render(request, 'blogsite/post/details.html', {'post':post})
+def post_details(request, year, month, day, post):
+    post = get_object_or_404(Post, status =Post.Status.PUBLISHED,
+                             slug =post,
+                             publish_year=year,
+                             publish_month=month,
+                             publish_day = day)
+    return render(request, 'blogsite/post/details.html', {'post':post} )
+
+  
 
